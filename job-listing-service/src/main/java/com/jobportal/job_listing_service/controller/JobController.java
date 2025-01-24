@@ -43,9 +43,9 @@ public class JobController {
     public ResponseEntity<JobDTO> getJobById(@PathVariable("id") Long id) {
         try {
             JobDTO jobDTO = jobService.getJobById(id);
-            return new ResponseEntity<>(jobDTO, HttpStatus.OK);  // Return 200 with the job details
+            return new ResponseEntity<>(jobDTO, HttpStatus.OK);
         } catch (ResourceNotFoundException ex) {
-            throw ex;  // Let the exception be handled by the global exception handler
+            throw ex;
         } catch (Exception e) {
             throw new RuntimeException("Error fetching job with id: " + id + " - " + e.getMessage());
         }

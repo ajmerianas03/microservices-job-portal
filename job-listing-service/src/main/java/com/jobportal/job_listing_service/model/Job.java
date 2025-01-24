@@ -14,6 +14,7 @@ public class Job {
     private String title;
 
     @Column(nullable = false)
+
     private String description;
 
     @ManyToOne
