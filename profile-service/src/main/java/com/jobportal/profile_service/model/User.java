@@ -1,12 +1,18 @@
-package com.microservices_job_portal.API.Gateway.model;
+package com.jobportal.profile_service.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.Collections;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,18 +32,13 @@ public class User {
     private String email;
 
 
-    @Column(name = "profile_id")
-    private Long profileId;
-
-    // Constructors, Getters, and Setters
     public User() {}
 
-    public User(Long id, String username, String password, String email, Long profileId) {
+    public User(Long id, String username, String password, String email) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.email = email;
-        this.profileId = profileId;
     }
 
     public Long getId() {
@@ -72,11 +73,36 @@ public class User {
         this.email = email;
     }
 
-    public Long getProfileId() {
-        return profileId;
+
+
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singleton(new SimpleGrantedAuthority("USER"));
     }
 
-    public void setProfileId(Long profileId) {
-        this.profileId = profileId;
+
+
+
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
     }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
 }

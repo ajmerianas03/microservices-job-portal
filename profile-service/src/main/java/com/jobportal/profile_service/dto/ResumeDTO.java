@@ -1,25 +1,23 @@
 package com.jobportal.profile_service.dto;
 
-
 public class ResumeDTO {
+
     private Long id;
     private String filePath;
     private String skills;
     private String experience;
-    private Long userProfileId;
 
-    public ResumeDTO() {
+    // Constructors
+    public ResumeDTO() {}
 
-    }
-
-    public ResumeDTO(Long id, String filePath, String skills, String experience, Long userProfileId) {
+    public ResumeDTO(Long id, String filePath, String skills, String experience) {
         this.id = id;
         this.filePath = filePath;
         this.skills = skills;
         this.experience = experience;
-        this.userProfileId = userProfileId;
     }
 
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -51,13 +49,4 @@ public class ResumeDTO {
     public void setExperience(String experience) {
         this.experience = experience;
     }
-
-    public Long getUserProfileId() {
-        return userProfileId;
-    }
-
-    public void setUserProfileId(Long userProfileId) {
-        this.userProfileId = userProfileId;
-    }
 }
-

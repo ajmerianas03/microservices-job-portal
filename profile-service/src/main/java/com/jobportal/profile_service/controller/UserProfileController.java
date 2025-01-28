@@ -1,87 +1,60 @@
 package com.jobportal.profile_service.controller;
 
-import com.jobportal.profile_service.dto.UserProfileDTO;
+import com.jobportal.profile_service.model.UserProfile;
 import com.jobportal.profile_service.service.UserProfileService;
 import com.jobportal.profile_service.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/user-profiles")
+@RequestMapping("/api/userProfiles")
 public class UserProfileController {
 
-    private final UserProfileService userProfileService;
-
     @Autowired
-    public UserProfileController(UserProfileService userProfileService) {
-        this.userProfileService = userProfileService;
-    }
+    private UserProfileService userProfileService;
 
-
+    // Create or update a user profile
     @PostMapping
-    public ResponseEntity<UserProfileDTO> createUserProfile(@RequestBody UserProfileDTO userProfileDTO) {
-        try {
-            UserProfileDTO createdProfile = userProfileService.createUserProfile(userProfileDTO);
-            return new ResponseEntity<>(createdProfile, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<UserProfile> saveUserProfile(@RequestBody UserProfile userProfile) {
+        UserProfile savedUserProfile = userProfileService.saveUserProfile(userProfile);
+        return new ResponseEntity<>(savedUserProfile, HttpStatus.CREATED);
     }
 
-
+    // Find a user profile by id
     @GetMapping("/{id}")
-    public ResponseEntity<UserProfileDTO> getUserProfileById(@PathVariable Long id) {
-        try {
-            UserProfileDTO userProfileDTO = userProfileService.getUserProfileById(id);
-            return new ResponseEntity<>(userProfileDTO, HttpStatus.OK);
-        } catch (ResourceNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<UserProfile> getUserProfileById(@PathVariable Long id) {
+        Optional<UserProfile> userProfile = userProfileService.findUserProfileById(id);
+        if (userProfile.isPresent()) {
+            return new ResponseEntity<>(userProfile.get(), HttpStatus.OK);
+        } else {
+            throw new ResourceNotFoundException("UserProfile", "id", id);
         }
     }
 
-
-
-    @PutMapping("/{id}")
-    public ResponseEntity<UserProfileDTO> updateUserProfile(@PathVariable Long id, @RequestBody UserProfileDTO userProfileDTO) {
-        try {
-            UserProfileDTO updatedProfile = userProfileService.updateUserProfile(id, userProfileDTO);
-            return new ResponseEntity<>(updatedProfile, HttpStatus.OK);
-        } catch (ResourceNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    // Find a user profile by user id
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<UserProfile> getUserProfileByUserId(@PathVariable Long userId) {
+        Optional<UserProfile> userProfile = userProfileService.findUserProfileByUserId(userId);
+        if (userProfile.isPresent()) {
+            return new ResponseEntity<>(userProfile.get(), HttpStatus.OK);
+        } else {
+            throw new ResourceNotFoundException("UserProfile", "user_id", userId);
         }
     }
 
-
+    // Delete a user profile by id
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUserProfile(@PathVariable Long id) {
-        try {
-            userProfileService.deleteUserProfile(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (ResourceNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-
-
-    @GetMapping
-    public ResponseEntity<List<UserProfileDTO>> getAllUserProfiles() {
-        try {
-            List<UserProfileDTO> userProfiles = userProfileService.getAllUserProfiles();
-            return new ResponseEntity<>(userProfiles, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<String> deleteUserProfileById(@PathVariable Long id) {
+        Optional<UserProfile> userProfile = userProfileService.findUserProfileById(id);
+        if (userProfile.isPresent()) {
+            userProfileService.deleteUserProfileById(id);
+            return new ResponseEntity<>("UserProfile deleted successfully", HttpStatus.OK);
+        } else {
+            throw new ResourceNotFoundException("UserProfile", "id", id);
         }
     }
 }

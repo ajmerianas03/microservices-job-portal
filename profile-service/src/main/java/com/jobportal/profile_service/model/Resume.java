@@ -1,7 +1,5 @@
 package com.jobportal.profile_service.model;
 
-
-
 import jakarta.persistence.*;
 
 @Entity
@@ -12,36 +10,30 @@ public class Resume {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     @Column(name = "file_path", nullable = false)
     private String filePath;
-
 
     @Column(name = "skills", nullable = false)
     private String skills;
 
-
     @Column(name = "experience", nullable = false)
     private String experience;
 
-    @OneToOne
-    @JoinColumn(name = "user_profile_id", nullable = false)
-    private UserProfile userProfile;
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 
-    // No-argument constructor
+    // Constructors, Getters, and Setters
     public Resume() {}
 
-
-
-    public Resume(Long id, String filePath, String skills, String experience, UserProfile userProfile) {
+    public Resume(Long id, String filePath, String skills, String experience, User user) {
         this.id = id;
         this.filePath = filePath;
         this.skills = skills;
         this.experience = experience;
-        this.userProfile = userProfile;
+        this.user = user;
     }
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -74,11 +66,11 @@ public class Resume {
         this.experience = experience;
     }
 
-    public UserProfile getUserProfile() {
-        return userProfile;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserProfile(UserProfile userProfile) {
-        this.userProfile = userProfile;
+    public void setUser(User user) {
+        this.user = user;
     }
 }

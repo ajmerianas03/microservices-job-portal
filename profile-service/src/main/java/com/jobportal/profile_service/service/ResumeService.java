@@ -1,12 +1,19 @@
 package com.jobportal.profile_service.service;
 
-import com.jobportal.profile_service.dto.ResumeDTO;
+import com.jobportal.profile_service.model.Resume;
+import java.util.Optional;
 
 public interface ResumeService {
 
+    // Create or update a resume
+    Resume saveResume(Resume resume);
 
-    ResumeDTO uploadResume(Long userProfileId, ResumeDTO resumeDTO);
-    ResumeDTO getResumeByUserProfileId(Long userProfileId);
-    ResumeDTO updateResume(Long userProfileId, ResumeDTO resumeDTO);
-    void deleteResume(Long userProfileId);
+    // Find a resume by id
+    Optional<Resume> findResumeById(Long id);
+
+    // Find a resume by user id
+    Optional<Resume> findResumeByUserId(Long userId);
+
+    // Delete a resume by id
+    void deleteResumeById(Long id);
 }
