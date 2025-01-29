@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/resumes")
+@RequestMapping("/profile/resumes")
 public class ResumeController {
 
     @Autowired
